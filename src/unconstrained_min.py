@@ -83,6 +83,7 @@ def minimize(f, x0, method="grad", obj_tol=1e-12, param_tol=1e-8, max_iter=100):
             # Check convergence:
             if abs(f_new - f_val) < obj_tol or np.linalg.norm(x_new - x) < param_tol:
                 success = True
+                print(Fore.GREEN + f"Converged in {iteration} iterations." + Style.RESET_ALL)
                 return x_new, f_new, success
 
             # Otherwise prepare for next iteration
@@ -127,6 +128,7 @@ def minimize(f, x0, method="grad", obj_tol=1e-12, param_tol=1e-8, max_iter=100):
             # Convergence checks:
             if abs(f_new - f_val) < obj_tol or np.linalg.norm(x_new - x) < param_tol:
                 success = True
+                print(Fore.GREEN + f"Converged in {iteration} iterations." + Style.RESET_ALL)
                 return x_new, f_new, success
 
             # Prepare for next iteration
