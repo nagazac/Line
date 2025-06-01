@@ -2,12 +2,12 @@ import unittest
 import numpy as np
 from colorama import Fore, Style, init
 
-from src.unconstrained_min import minimize, get_optimization_history
+from src.unconstrained_min import minimize, get_history
 from src.utils import plot_contour, plot_function_values
 from tests.examples import (
-    quad_circle,
-    quad_ellipse_axis,
-    quad_ellipse_rotated,
+    q_circle,
+    q_ellipse_axis,
+    q_ellipse_rotated,
     rosenbrock,
     linear_func,
     smooth_corner
@@ -47,7 +47,7 @@ class TestUnconstrainedMinimization(unittest.TestCase):
         """
         # -- Run Gradient Descent --
         xg, fg, success_gd = minimize(f=func, x0=x0, algo="grad", obj_tol=tol_obj, param_tol=tol_param, max_iter=max_iter_gd)
-        hist_gd = get_optimization_history()
+        hist_gd = get_history()
 
         print(
             Fore.BLUE + "GD Final for " + func.__name__ + ":" + Style.RESET_ALL +
@@ -56,7 +56,7 @@ class TestUnconstrainedMinimization(unittest.TestCase):
 
         # -- Run Newton's Method --
         xn, fn, success_nt = minimize(f=func, x0=x0, algo="newton", obj_tol=tol_obj, param_tol=tol_param, max_iter=max_iter_nt)
-        hist_nt = get_optimization_history()
+        hist_nt = get_history()
 
         print(
             Fore.MAGENTA + "NT Final for " + func.__name__ + ":" + Style.RESET_ALL +
@@ -160,13 +160,13 @@ class TestUnconstrainedMinimization(unittest.TestCase):
         plt.legend()
         plt.show()
 
-    def test_quad_circle(self):
+    def test_q_circle(self):
         """
         f(x) = x₁² + x₂²
         Initial x0 = [1, 1], tolerances = 1e-12, 1e-8, max_iter=100.
         Contour limits chosen to enclose the path observed in history.
         """
-        func = quad_circle
+        func = q_circle
         x0 = np.array([1.0, 1.0])
         tol_obj = 1e-12
         tol_param = 1e-8
@@ -191,13 +191,13 @@ class TestUnconstrainedMinimization(unittest.TestCase):
             levels=levels
         )
 
-    def test_quad_ellipse_axis(self):
+    def test_q_ellipse_axis(self):
         """
         f(x) = x₁² + 100 x₂²
         Initial x0 = [1, 1], tolerances = 1e-12, 1e-8, max_iter=100.
         Contour limits chosen to enclose the narrow, tall ellipse path. 
         """
-        func = quad_ellipse_axis
+        func = q_ellipse_axis
         x0 = np.array([1.0, 1.0])
         tol_obj = 1e-12
         tol_param = 1e-8
@@ -223,13 +223,13 @@ class TestUnconstrainedMinimization(unittest.TestCase):
             levels=levels
         )
 
-    def test_quad_ellipse_rotated(self):
+    def test_q_ellipse_rotated(self):
         """
         f(x) = xᵀ Q x, where Q is the rotated ellipse matrix.
         Initial x0 = [1, 1], tolerances = 1e-12, 1e-8, max_iter=100.
         Contour limits roughly [-1.2, 1.2] × [-1.2, 1.2] to see diagonal orientation.
         """
-        func = quad_ellipse_rotated
+        func = q_ellipse_rotated
         x0 = np.array([1.0, 1.0])
         tol_obj = 1e-12
         tol_param = 1e-8

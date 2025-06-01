@@ -15,7 +15,7 @@ def get_history():
     """
     return history
 
-def minimize(f, x0, method="grad", obj_tol=1e-12, param_tol=1e-8, max_iter=100):
+def minimize(f, x0, algo="grad", obj_tol=1e-12, param_tol=1e-8, max_iter=100):
     """
     Minimize a function using either gradient descent or Newton's method.
 
@@ -40,7 +40,7 @@ def minimize(f, x0, method="grad", obj_tol=1e-12, param_tol=1e-8, max_iter=100):
     x = np.array(x0, dtype=float).flatten()
 
     # Evaluate f, grad, hessian (only need hessian if method="newton")
-    if method == "newton":
+    if algo == "newton":
         f_val, grad, hess = f(x, hessian=True)
     else:
         f_val, grad, _ = f(x, hessian=False)
@@ -56,7 +56,7 @@ def minimize(f, x0, method="grad", obj_tol=1e-12, param_tol=1e-8, max_iter=100):
     iteration = 0
     success = False
 
-    if method == "grad":
+    if algo == "grad":
         # --------------------------
         # Gradient Descent Loop
         # --------------------------
@@ -94,7 +94,7 @@ def minimize(f, x0, method="grad", obj_tol=1e-12, param_tol=1e-8, max_iter=100):
         # If we exit the loop, we hit max_iter
         return x, f_val, success
 
-    elif method == "newton":
+    elif algo == "newton":
         # --------------------------
         # Newton's Method Loop
         # --------------------------
@@ -141,7 +141,7 @@ def minimize(f, x0, method="grad", obj_tol=1e-12, param_tol=1e-8, max_iter=100):
         return x, f_val, success
 
     else:
-        raise ValueError(f"Unknown method '{method}' (must be 'grad' or 'newton')")
+        raise ValueError(f"Unknown method '{algo}' (must be 'grad' or 'newton')")
 
 
 def backtrack(f, x, fx, grad, d, c=0.01, b=0.5, a=1.0):
