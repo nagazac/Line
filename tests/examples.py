@@ -78,10 +78,10 @@ def rosenbrock(x, hessian=False):
 
 def linear_func(x, hessian=False):
     """
-    f(x) = aᵀ x, with a chosen as [1, 2]ᵀ (non-zero vector).
+    f(x) = aᵀ x, with a chosen as [-6, 8]ᵀ (non-zero vector).
     """
     x = np.array(x, dtype=float).flatten()
-    a = np.array([1.0, 2.0])
+    a = np.array([-6.0, 8.0])
     f = a.T @ x
     g = a.copy()
     if hessian:
@@ -89,6 +89,7 @@ def linear_func(x, hessian=False):
     else:
         h = None
     return f, g, h
+
 
 def smooth_corner(x, hessian=False):
     """

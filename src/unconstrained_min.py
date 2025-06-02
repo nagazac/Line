@@ -84,7 +84,7 @@ def minimize(f, x0, algo="grad", obj_tol=1e-12, param_tol=1e-8, max_iter=100):
             if abs(f_new - f_val) < obj_tol or np.linalg.norm(x_new - x) < param_tol:
                 success = True
                 print(Fore.GREEN + f"Converged in {iteration} iterations." + Style.RESET_ALL)
-                return x_new, f_new, success
+                return iteration, x_new, f_new, success
 
             # Otherwise prepare for next iteration
             x = x_new
@@ -92,7 +92,8 @@ def minimize(f, x0, algo="grad", obj_tol=1e-12, param_tol=1e-8, max_iter=100):
             grad = grad_new
 
         # If we exit the loop, we hit max_iter
-        return x, f_val, success
+        print(Fore.RED + f"Reached max_iter {max_iter} without convergence." + Style.RESET_ALL)
+        return iteration, x, f_val, success
 
     elif algo == "newton":
         # --------------------------
@@ -129,7 +130,7 @@ def minimize(f, x0, algo="grad", obj_tol=1e-12, param_tol=1e-8, max_iter=100):
             if abs(f_new - f_val) < obj_tol or np.linalg.norm(x_new - x) < param_tol:
                 success = True
                 print(Fore.GREEN + f"Converged in {iteration} iterations." + Style.RESET_ALL)
-                return x_new, f_new, success
+                return iteration, x_new, f_new, success
 
             # Prepare for next iteration
             x = x_new
@@ -138,7 +139,8 @@ def minimize(f, x0, algo="grad", obj_tol=1e-12, param_tol=1e-8, max_iter=100):
             hess = hess_new
 
         # If we exit the loop, we hit max_iter
-        return x, f_val, success
+        print(Fore.RED + f"Reached max_iter {max_iter} without convergence." + Style.RESET_ALL)
+        return iteration, x, f_val, success
 
     else:
         raise ValueError(f"Unknown method '{algo}' (must be 'grad' or 'newton')")
