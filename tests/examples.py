@@ -119,3 +119,57 @@ def smooth_corner(x, hessian=False):
         h = None
 
     return f, g, h
+
+
+# Quadratic Program (QP):
+def qp_obj(x):
+    # f(x) = x^2 + y^2 + (z+1)^2
+    f = x[0]**2 + x[1]**2 + (x[2] + 1)**2
+    grad = np.array([2*x[0], 2*x[1], 2*(x[2] + 1)])
+    hess = 2 * np.eye(3)
+    return f, grad, hess
+
+def qp_constraints():
+    # x >= 0, y >= 0, z >= 0 captured as -x <= 0, -y <= 0, -z <= 0
+    return [
+        lambda x: (-x[0], np.array([-1.0,  0.0,  0.0]), np.zeros((3,3))),
+        lambda x: (-x[1], np.array([ 0.0, -1.0,  0.0]), np.zeros((3,3))),
+        lambda x: (-x[2], np.array([ 0.0,  0.0, -1.0]), np.zeros((3,3)))
+    ]
+
+# Equality constraint: x + y + z = 1
+def get_qp_data():
+    A_qp = np.array([[1.0, 1.0, 1.0]])
+    b_qp = np.array([1.0])
+    x0_qp = np.array([0.1, 0.2, 0.7])  # strictly feasible start
+    return A_qp, b_qp, x0_qp
+
+# Linear Program (LP): maximize x+y over polygon
+def lp_obj(x):
+    # max x+y <=> min -(x+y)
+    f = -(x[0] + x[1])
+    grad = np.array([-1.0, -1.0])
+    hess = np.zeros((2,2))
+    return f, grad, hess
+
+def lp_constraints():
+    return [
+        # y ≥ –x + 1  ⇔  –(y + x – 1) ≤ 0
+        lambda x: (-(x[1] + x[0] - 1.0), np.array([-1.0, -1.0]), np.zeros((2,2))),
+        # y ≤ 1       ⇔  y – 1 ≤ 0
+        lambda x: ( x[1] - 1.0,            np.array([ 0.0,  1.0]), np.zeros((2,2))),
+        # x ≤ 2       ⇔  x – 2 ≤ 0
+        lambda x: ( x[0] - 2.0,            np.array([ 1.0,  0.0]), np.zeros((2,2))),
+        # y ≥ 0       ⇔  –y ≤ 0
+        lambda x: (-x[1],                  np.array([ 0.0, -1.0]), np.zeros((2,2)))
+    ]
+
+# No equality constraints for LP
+
+def get_lp_data():
+    A_lp = np.zeros((0,2))
+    b_lp = np.zeros((0,))
+    x0_lp = np.array([0.5, 0.75])   # strictly feasible start
+    return A_lp, b_lp, x0_lp
+
+

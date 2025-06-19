@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.patches import Polygon
 
 # Import get_history from your optimization module
 from src.unconstrained_min import get_history
@@ -166,4 +167,73 @@ def plot_function_values_two(
     plt.ylabel("f(x) [log scale]")
     plt.grid(True, which="both", ls="--")
     plt.legend()
+    plt.show()
+
+
+def plot_qp_region_and_path(path, x_star):
+    """
+    Plot the 3D simplex feasible region and the central path for the QP example.
+
+    Parameters:
+    - path: array of shape (K,3) with the central path outer iterates
+    - x_star: array of shape (3,) with the final solution
+    """
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    # Simplex vertices
+    verts = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+    # Plot simplex as a triangular surface
+    ax.plot_trisurf(verts[:,0], verts[:,1], verts[:,2], color='lightgray', alpha=0.5)
+    # Plot central path points
+    ax.plot(path[:,0], path[:,1], path[:,2], '-o', label='central path')
+    # Highlight final solution
+    ax.scatter(x_star[0], x_star[1], x_star[2], color='red', s=50, label='solution')
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
+    ax.set_zlabel('z')
+    ax.set_title('QP Feasible Region & Central Path')
+    ax.legend()
+    plt.show()
+
+
+def plot_lp_region_and_path(path, x_star):
+    """
+    Plot the 2D polygon feasible region and the central path for the LP example.
+
+    Parameters:
+    - path: array of shape (K,2) with the central path outer iterates
+    - x_star: array of shape (2,) with the final solution
+    """
+    fig, ax = plt.subplots()
+    # Define polygon vertices of the feasible region
+    verts = np.array([[1,0], [2,0], [2,1], [0,1]])
+    poly = Polygon(verts, facecolor='lightgray', alpha=0.5)
+    ax.add_patch(poly)
+    # Plot central path points
+    ax.plot(path[:,0], path[:,1], '-o', label='central path')
+    # Highlight final solution
+    ax.scatter(x_star[0], x_star[1], color='red', s=50, label='solution')
+    ax.set_xlim(0, 2.1)
+    ax.set_ylim(0, 1.1)
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
+    ax.set_title('LP Feasible Region & Central Path')
+    ax.set_aspect('equal', 'box')
+    ax.legend()
+    plt.show()
+
+
+def plot_objective_vs_outer(obj_vals, title='Objective vs Outer Iteration'):
+    """
+    Plot the objective value against outer iteration number.
+
+    Parameters:
+    - obj_vals: array-like of objectives at each outer iteration
+    - title: title string for the plot
+    """
+    plt.figure()
+    plt.plot(np.arange(len(obj_vals)), obj_vals, '-o')
+    plt.xlabel('Outer iteration')
+    plt.ylabel('Objective value')
+    plt.title(title)
     plt.show()
